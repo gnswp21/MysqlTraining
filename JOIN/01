@@ -1,0 +1,45 @@
+
+### 출처
+
+https://school.programmers.co.kr/learn/courses/30/lessons/59042
+
+### **문제 설명**
+
+`ANIMAL_INS` 테이블은 동물 보호소에 들어온 동물의 정보를 담은 테이블입니다. `ANIMAL_INS` 테이블 구조는 다음과 같으며, `ANIMAL_ID`, `ANIMAL_TYPE`, `DATETIME`, `INTAKE_CONDITION`, `NAME`, `SEX_UPON_INTAKE`는 각각 동물의 아이디, 생물 종, 보호 시작일, 보호 시작 시 상태, 이름, 성별 및 중성화 여부를 나타냅니다.
+
+| NAME | TYPE | NULLABLE |
+| --- | --- | --- |
+| ANIMAL_ID | VARCHAR(N) | FALSE |
+| ANIMAL_TYPE | VARCHAR(N) | FALSE |
+| DATETIME | DATETIME | FALSE |
+| INTAKE_CONDITION | VARCHAR(N) | FALSE |
+| NAME | VARCHAR(N) | TRUE |
+| SEX_UPON_INTAKE | VARCHAR(N) | FALSE |
+
+`ANIMAL_OUTS` 테이블은 동물 보호소에서 입양 보낸 동물의 정보를 담은 테이블입니다. `ANIMAL_OUTS` 테이블 구조는 다음과 같으며, `ANIMAL_ID`, `ANIMAL_TYPE`, `DATETIME`, `NAME`, `SEX_UPON_OUTCOME`는 각각 동물의 아이디, 생물 종, 입양일, 이름, 성별 및 중성화 여부를 나타냅니다. `ANIMAL_OUTS` 테이블의 `ANIMAL_ID`는 `ANIMAL_INS`의 `ANIMAL_ID`의 외래 키입니다.
+
+| NAME | TYPE | NULLABLE |
+| --- | --- | --- |
+| ANIMAL_ID | VARCHAR(N) | FALSE |
+| ANIMAL_TYPE | VARCHAR(N) | FALSE |
+| DATETIME | DATETIME | FALSE |
+| NAME | VARCHAR(N) | TRUE |
+| SEX_UPON_OUTCOME | VARCHAR(N) | FALSE |
+
+천재지변으로 인해 일부 데이터가 유실되었습니다. 입양을 간 기록은 있는데, 보호소에 들어온 기록이 없는 동물의 ID와 이름을 ID 순으로 조회하는 SQL문을 작성해주세요.
+
+
+### 정답
+
+```python
+-- 코드를 입력하세요
+SELECT o.ANIMAL_ID as ANIMAL_ID, o.NAME
+FROM ANIMAL_INS as i
+RIGHT JOIN ANIMAL_OUTS as o ON i.ANIMAL_ID = o.ANIMAL_ID
+WHERE i.ANIMAL_ID is NULL
+ORDER BY o.ANIMAL_ID
+```
+
+### 해설
+
+sql에서 조인은 inner join(이너 조인)과 outer join(아우터 조인)으로 나눌 수 있는데,  이너 조인의 경우 조인하는 값이 양쪽다 있는 경우만 가져온다. 그에 비해 아우터 조인의 경우 한쪽의 값이 널인 경우에도 그 값을 가져와 조인할 수 있는데, 널값을 허용하는 테이블의 위치(왼쪽, 오른쪽, 양쪽)에 따라 left join, right join, full outer join으로 구분하여 사용할 수 있다.
